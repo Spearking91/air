@@ -1,4 +1,3 @@
-import 'package:air/Pages/dash_board_page.dart';
 import 'package:air/Pages/onboarding_page.dart';
 import 'package:air/firebase_options.dart';
 import 'package:air/widgets/notifier.dart';
@@ -14,7 +13,7 @@ Future<void> main() async {
   runApp(const MyApp());
   // precacheImage(, context);
 }
-
+                                                                                                                                 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
