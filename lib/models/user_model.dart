@@ -6,7 +6,11 @@ class UserModel {
   String email;
   List<String>? devices;
 
-  UserModel({required this.id, required this.username, required this.email, this.devices});
+  UserModel(
+      {required this.id,
+      required this.username,
+      required this.email,
+      this.devices});
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
@@ -19,7 +23,7 @@ class UserModel {
   }
 
   Map<String, dynamic> toJson() {
-    return {               
+    return {
       'id': id,
       'email': email,
       'username': username,

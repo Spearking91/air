@@ -143,13 +143,13 @@ class FirestoreMethods {
 
   static Future<void> saveDevice(DeviceModel device) async {
     try {
-       await _deviceRef
+      await _deviceRef
           .doc(FirebaseAuthMethod.user?.uid ?? "")
           .set(device.toJson());
 
-          await _userRef.doc(FirebaseAuthMethod.user?.uid ?? "").update({
-            'devices': FieldValue.arrayUnion([device.id])
-          });
+      await _userRef.doc(FirebaseAuthMethod.user?.uid ?? "").update({
+        'devices': FieldValue.arrayUnion([device.id])
+      });
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -157,14 +157,13 @@ class FirestoreMethods {
 
   static Future<void> removeDevice(String deviceId) async {
     try {
-       await _userRef.doc(FirebaseAuthMethod.user?.uid ?? "").update({
+      await _userRef.doc(FirebaseAuthMethod.user?.uid ?? "").update({
         'devices': FieldValue.arrayRemove([deviceId])
       });
     } catch (e) {
       throw Exception(e.toString());
     }
   }
-  
 }
 
 class Constants {
