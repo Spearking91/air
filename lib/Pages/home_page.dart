@@ -87,7 +87,7 @@ class _HomepageState extends State<Homepage> {
                     height: MediaQuery.sizeOf(context).height * 0.4,
                     padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                     child: StreamBuilder<UploadModel>(
-                      stream: FirebaseDatabaseMethods.getDataAsStream(),
+                      stream: FirebaseDatabaseMethods.getDataAsStream(''),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return Meter(

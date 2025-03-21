@@ -1,4 +1,7 @@
+import 'package:air/models/device.dart';
 import 'package:air/models/upload.dart';
+import 'package:air/models/user_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +11,10 @@ class FirebaseDatabaseMethods {
   static final _database = FirebaseDatabase.instance;
 
   //As stream
-  static Stream<UploadModel> getDataAsStream() {
-    final databaseRef =
-        _database.ref().child("${Constants.firebasePath}/devices.json");
+  static Stream<UploadModel> getDataAsStream(String macAddress) {
+    final databaseRef = _database
+        .ref()
+        .child("${'${Constants.firebasePath}/$macAddress'}/devices.json");
     return databaseRef.orderByKey().limitToLast(1).onValue.map((event) {
       final data = event.snapshot.value as Map<dynamic, dynamic>;
       final latestData = data.values.first;
@@ -98,18 +102,76 @@ class FirebaseAuthMethod {
   }
 }
 
+class FirestoreMethods {
+  FirestoreMethods._();
+
+  static final _firestore = FirebaseFirestore.instance;
+
+  static FirebaseFirestore get firestore => _firestore;
+
+  static final CollectionReference _userRef = _firestore.collection('users');
+
+  static CollectionReference _deviceRef = _firestore.collection('devices');
+
+  static Future<void> saveUser(UserModel user) async {
+    try {
+      await _userRef.doc(user.id).set(user.toJson());
+      ;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  static Future<UserModel> getUser() async {
+    try {
+      final data = await _userRef.doc(FirebaseAuthMethod.user?.uid ?? "").get();
+      if (data.exists) {
+        return UserModel.fromJson(data.data()! as Map<String, dynamic>);
+      } else {
+        throw Exception('User not found');
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  // static Future<List<DeviceModel>>? getDevices()async{
+
+  //     final data = await _deviceRef.doc(FirebaseAuthMethod.user?.uid??"").get();
+
+  // }
+
+  static Future<void> saveDevice(DeviceModel device) async {
+    try {
+       await _deviceRef
+          .doc(FirebaseAuthMethod.user?.uid ?? "")
+          .set(device.toJson());
+
+          await _userRef.doc(FirebaseAuthMethod.user?.uid ?? "").update({
+            'devices': FieldValue.arrayUnion([device.id])
+          });
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  static Future<void> removeDevice(String deviceId) async {
+    try {
+       await _userRef.doc(FirebaseAuthMethod.user?.uid ?? "").update({
+        'devices': FieldValue.arrayRemove([deviceId])
+      });
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+  
+}
+
 class Constants {
   Constants._();
   static const firebaseUrl = 'https://air-esp32-default-rtdb.firebaseio.com/';
   static const firebasePath = 'firsTestSystem/';
 }
-
-
-
-
-
-
-
 
 // import 'package:air/models/upload.dart';
 // import 'package:firebase_auth/firebase_auth.dart';

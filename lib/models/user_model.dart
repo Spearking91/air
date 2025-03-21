@@ -1,15 +1,17 @@
 import 'dart:convert';
 
 class UserModel {
+  String id;
   String username;
   String email;
   List<String>? devices;
 
-  UserModel({required this.username, required this.email, this.devices});
+  UserModel({required this.id, required this.username, required this.email, this.devices});
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-        username: json['username'],
+        id: json['id'],
+        username: json['userna MM  Mme'],
         email: json['email'],
         devices: json['devices'] != null
             ? List<String>.from(json['devices'])
@@ -17,7 +19,8 @@ class UserModel {
   }
 
   Map<String, dynamic> toJson() {
-    return {
+    return {               
+      'id': id,
       'email': email,
       'username': username,
       'devices': devices,

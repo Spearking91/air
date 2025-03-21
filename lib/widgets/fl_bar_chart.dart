@@ -46,7 +46,7 @@ class _FlBarChartState extends State<FlBarChart> {
         children: [
           Expanded(
             child: StreamBuilder<UploadModel>(
-              stream: FirebaseDatabaseMethods.getDataAsStream(),
+              stream: FirebaseDatabaseMethods.getDataAsStream(''),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   // Add new data point with current timestamp
